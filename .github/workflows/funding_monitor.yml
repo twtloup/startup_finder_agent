@@ -40,7 +40,7 @@ jobs:
         run: mkdir -p data
 
       - name: Restore database from cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: data/funding_monitor.db
           key: funding-db-${{ github.run_id }}
@@ -57,7 +57,7 @@ jobs:
           python src/main.py
 
       - name: Save database to cache
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v4
         if: always()
         with:
           path: data/funding_monitor.db
@@ -65,7 +65,7 @@ jobs:
 
       - name: Upload logs on failure
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: funding-monitor-logs
           path: funding_monitor.log
