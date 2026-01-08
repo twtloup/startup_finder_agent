@@ -1,0 +1,24 @@
+# RSS Parsing
+feedparser==6.0.11
+
+# HTTP requests with retry logic
+requests==2.31.0
+
+# Environment variables management
+python-dotenv==1.0.0
+
+# HTML templating for emails
+jinja2==3.1.2
+
+# Testing framework
+pytest==7.4.3
+
+# Flexible date parsing for RSS feeds
+python-dateutil==2.8.2
+
+# Built-in libraries (no installation needed):
+# - sqlite3: Database operations
+# - smtplib: Email sending via SMTP
+# - re: Regular expressions
+# - datetime: Date/time handling
+# - logging: Application logging

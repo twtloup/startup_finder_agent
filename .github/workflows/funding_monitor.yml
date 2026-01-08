@@ -1,0 +1,72 @@
+name: Venture Funding Monitor
+
+on:
+  schedule:
+    # Run daily at 8 AM UTC (9 AM UK winter time, 8 AM summer time)
+    - cron: '0 8 * * *'
+
+  workflow_dispatch:
+    # Allow manual triggering from GitHub UI
+    inputs:
+      digest_type:
+        description: 'Digest type (daily or weekly)'
+        required: false
+        default: 'daily'
+        type: choice
+        options:
+          - daily
+          - weekly
+
+jobs:
+  monitor_funding:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Create data directory
+        run: mkdir -p data
+
+      - name: Restore database from cache
+        uses: actions/cache@v3
+        with:
+          path: data/funding_monitor.db
+          key: funding-db-${{ github.run_id }}
+          restore-keys: |
+            funding-db-
+
+      - name: Run funding monitor
+        env:
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
+          DIGEST_TYPE: ${{ github.event.inputs.digest_type || 'daily' }}
+        run: |
+          python src/main.py
+
+      - name: Save database to cache
+        uses: actions/cache/save@v3
+        if: always()
+        with:
+          path: data/funding_monitor.db
+          key: funding-db-${{ github.run_id }}
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: funding-monitor-logs
+          path: funding_monitor.log
+          retention-days: 7
