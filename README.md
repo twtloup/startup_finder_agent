@@ -8,7 +8,7 @@ An automated system that monitors RSS feeds from tech/startup news sources, iden
 
 ## Features
 
-- Monitors RSS feeds from TechCrunch, Sifted, VentureBeat, and Crunchbase News
+- Monitors 9 RSS feeds including TechCrunch, Sifted, VentureBeat, Crunchbase News, EU-Startups, UKTN, Silicon Canals, Sifted Fintech, and The Fintech Times
 - Uses regex-based pattern matching to detect funding announcements (no LLM API required)
 - Extracts company name, funding stage, amount, location, and industry
 - Stores data in SQLite database to avoid duplicate processing
@@ -118,15 +118,15 @@ python src/main.py
 ```
 
 **What happens:**
-1. Fetches RSS feeds from TechCrunch, Sifted, VentureBeat, Crunchbase
+1. Fetches RSS feeds from 9 sources (TechCrunch, Sifted, VentureBeat, Crunchbase, EU-Startups, UKTN, Silicon Canals, Sifted Fintech, The Fintech Times)
 2. Detects funding announcements using regex patterns
 3. Stores results in `data/funding_monitor.db`
 4. Sends email digest if funding announcements found
 5. Logs output to console and `funding_monitor.log`
 
 **First Run:**
-- Expect to process 50-100 articles from RSS feeds
-- Should find 2-5 relevant funding announcements
+- Expect to process 100-200 articles from 9 RSS feeds
+- Should find 5-10 relevant funding announcements
 - Check your email for the digest
 
 ## GitHub Actions Deployment (Automated)
@@ -267,10 +267,22 @@ Edit `src/config.py` to add/remove RSS feeds:
 
 ```python
 RSS_FEEDS = {
+    # Global tech news
     'TechCrunch': 'https://techcrunch.com/feed/',
-    'Sifted': 'https://sifted.eu/feed',
     'VentureBeat': 'https://venturebeat.com/feed/',
-    'Crunchbase News': 'https://news.crunchbase.com/feed/'
+    'Crunchbase News': 'https://news.crunchbase.com/feed/',
+
+    # European startup news
+    'Sifted': 'https://sifted.eu/feed',
+    'EU-Startups': 'https://eu-startups.com/feed',
+    'Silicon Canals': 'https://siliconcanals.com/feed',
+
+    # UK-focused news
+    'UKTN': 'https://uktech.news/feed',
+
+    # Fintech-specific sources
+    'Sifted Fintech': 'https://sifted.eu/sector/fintech/feed',
+    'The Fintech Times': 'https://thefintechtimes.com/feed'
 }
 ```
 
@@ -387,15 +399,16 @@ SELECT COUNT(*) FROM articles WHERE is_funding_related = 1;
 ## Expected Results
 
 ### First Run
-- 50-100 articles fetched from RSS feeds
-- 2-5 relevant funding announcements detected
-- Email digest with 2-5 companies
+- 100-200 articles fetched from 9 RSS feeds
+- 5-10 relevant funding announcements detected
+- Email digest with 5-10 companies
 
 ### Daily Runs
-- 1-3 new funding announcements per day
+- 3-7 new funding announcements per day (increased with more feeds)
 - Some days may have zero (normal)
 - Mostly Series A/B (Series C less frequent)
 - Mix of UK, European, and Middle Eastern companies
+- Higher coverage of fintech companies due to specialized feeds
 
 ## Maintenance
 

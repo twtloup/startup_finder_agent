@@ -16,10 +16,22 @@ load_dotenv()
 # These are the main tech/startup news sources we'll monitor for funding announcements
 
 RSS_FEEDS = {
+    # Global tech news
     'TechCrunch': 'https://techcrunch.com/feed/',
-    'Sifted': 'https://sifted.eu/feed',
     'VentureBeat': 'https://venturebeat.com/feed/',
-    'Crunchbase News': 'https://news.crunchbase.com/feed/'
+    'Crunchbase News': 'https://news.crunchbase.com/feed/',
+
+    # European startup news
+    'Sifted': 'https://sifted.eu/feed',  # European startup news from Financial Times
+    'EU-Startups': 'https://eu-startups.com/feed',  # Leading European startup news, high density of funding announcements
+    'Silicon Canals': 'https://siliconcanals.com/feed',  # Benelux and Netherlands startup ecosystem
+
+    # UK-focused news
+    'UKTN': 'https://uktech.news/feed',  # Comprehensive UK tech and startup coverage
+
+    # Fintech-specific sources
+    'Sifted Fintech': 'https://sifted.eu/sector/fintech/feed',  # European fintech specialist coverage
+    'The Fintech Times': 'https://thefintechtimes.com/feed'  # Global fintech news, UK-based publication
 }
 
 # ====================
